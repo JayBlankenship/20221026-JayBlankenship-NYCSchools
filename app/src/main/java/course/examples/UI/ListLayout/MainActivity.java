@@ -21,7 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+// given more time this wouldnt all be packed in the main activity and i would be using more then toast msg and system output for output and interaction but i have another job i have stuff for them as well and this is due in a day it was a good challenge tho thankyou:)
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> schoolnames;
     ArrayList<String> schoolinfo;
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         schoolnames = new ArrayList<>();
         schoolinfo = new ArrayList<>();
-        schoolinfonumber = new HashMap<String,String>();
-        schoolinfonumberindex = new HashMap<String,String>();
+        schoolinfonumber = new HashMap<String,String>();//ewww double hash map i know but it makes access super easy when you built everything and find out later its all being cross examimed for information, there are definitly less data structure solutions , this was quick and dirty though of
+        schoolinfonumberindex = new HashMap<String,String>();// how i could link the "dbn" number that was linking the grades :)
         //lv = findViewById(R.id.listview);
         // Create a new Adapter containing a list of colors
         // Set the adapter on this ListView

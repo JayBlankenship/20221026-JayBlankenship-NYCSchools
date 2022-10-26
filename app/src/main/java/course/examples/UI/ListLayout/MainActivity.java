@@ -25,6 +25,8 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> schoolnames;
     ArrayList<String> schoolinfo;
+    HashMap<String,String> schoolinfonumber;
+    HashMap<String,String> schoolinfonumberindex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         schoolnames = new ArrayList<>();
         schoolinfo = new ArrayList<>();
+        schoolinfonumber = new HashMap<String,String>();
+        schoolinfonumberindex = new HashMap<String,String>();
         //lv = findViewById(R.id.listview);
         // Create a new Adapter containing a list of colors
         // Set the adapter on this ListView
@@ -49,20 +53,26 @@ public class MainActivity extends AppCompatActivity {
             // wrapping the urlconnection in a bufferedreader
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String line;
+            int i = 0;
             // reading from the urlconnection using the bufferedreader
             while ((line = bufferedReader.readLine()) != null)
             {
                 content.append(line + "\n");
                 System.out.println(line);
                 String[] newtemp = line.split("\"school_name\":");
+                System.out.println(newtemp[0].split(":")[1].split("\"")[1]);
                 System.out.println(newtemp[1]);
                 String SchoolName = newtemp[1].split(",")[0];
 
                 String SchoolInformation = newtemp[1].split("overview_paragraph")[1];
                 System.out.println(SchoolInformation);
                 System.out.println(SchoolName);
+                schoolinfonumber.put(newtemp[0].split(":")[1].split("\"")[1],SchoolInformation.split("\"")[2]);//fill this later
                 schoolinfo.add(SchoolInformation.split("\"")[2]);
                 schoolnames.add(SchoolName);
+                schoolinfonumberindex.put(String.valueOf(i),newtemp[0].split(":")[1].split("\"")[1]);//fill this later
+
+                i++;
             }
             bufferedReader.close();
         }
@@ -70,6 +80,38 @@ public class MainActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+
+        try
+        {
+            URL url2 = new URL("https://data.cityofnewyork.us/resource/f9bf-2cp4.json"); // creating a url object
+            URLConnection urlConnection2 = url2.openConnection(); // creating a urlconnection object
+
+            // wrapping the urlconnection in a bufferedreader
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection2.getInputStream()));
+            String line;
+            // reading from the urlconnection using the bufferedreader
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                content.append(line + "\n");
+                System.out.println(line);
+                System.out.println(line.split(":")[1].split("\"")[1]);
+                System.out.println(line.split(":")[2] + line.split(":")[3]+ line.split(":")[4]+ line.split(":")[5] + line.split(":")[6]);
+                schoolinfonumber.put(line.split(":")[1].split("\"")[1],line.split(":")[2] + line.split(":")[3]+ line.split(":")[4]+ line.split(":")[5] + line.split(":")[6]);
+            }
+            bufferedReader.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
 
         lv.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 schoolnames));
@@ -97,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Display a Toast message indicting the selected item
 				Toast.makeText(getApplicationContext(),
-                        schoolinfo.get(position), Toast.LENGTH_SHORT).show();
+                        schoolinfonumber.get(schoolinfonumberindex.get(String.valueOf(position))), Toast.LENGTH_LONG).show();
+                System.out.println(schoolinfonumber.get(schoolinfonumberindex.get(String.valueOf(position))));
             }
         });
     }
